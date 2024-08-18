@@ -48,12 +48,18 @@ report(
     #[0x123456, #[18, 52, 86]],
   ],
 )
-
+report(Color.luminance, "luminance", [#[#[3, 3, 3], #[0.6378, 2.1456, 0.21660000000000001]]])
 report(channelR, "channelR", [#[0xff0000, 0xff], #[0x120000, 0x12]])
 report(
   Color.contrastByLuminance,
   "contrastByLuminance",
-  [#[#[255, 100, 30], Color.WHITE], #[#[30, 120, 255], Color.WHITE], #[Color.BLACK, Color.WHITE]],
+  [
+    #[#[255, 100, 30], Color.WHITE],
+    #[#[30, 120, 255], Color.WHITE],
+    #[Color.BLACK, Color.WHITE],
+    #[Color.WHITE, Color.WHITE],
+    #[#[128, 128, 128], Color.WHITE],
+  ],
 )
 
 report(
@@ -105,3 +111,59 @@ report(
     #[#[255, 255, 255], #[126, 126, 126]],
   ],
 )
+
+report(
+  pipe(
+    Color.colorize("check"),
+    String.toList,
+  ),
+  "Color.colorize",
+  [
+    #[
+      "hey",
+      [
+        '\x1b',
+        '[',
+        '3',
+        '8',
+        ';',
+        '2',
+        ';',
+        '0',
+        ';',
+        '0',
+        ';',
+        '0',
+        ';',
+        '4',
+        '8',
+        ';',
+        '2',
+        ';',
+        '1',
+        '8',
+        '5',
+        ';',
+        '1',
+        '4',
+        '4',
+        ';',
+        '1',
+        '0',
+        'm',
+        'h',
+        'e',
+        'y',
+        '\x1b',
+        '[',
+        '0',
+        'm',
+      ],
+    ],
+  ],
+)
+
+report(Color.toTupleInt, "toTupleInt", [#[#[12.02, 30.2, 2.35], #[12, 30, 2]]])
+
+report(Color.invert, "invert", [#[29, 226]])
+report(Color.rgbInvert, "rgbInvert", [#[#[12, 30, 2], #[243, 225, 253]]])

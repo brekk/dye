@@ -3,6 +3,7 @@ import Float from "Float"
 import { identity } from "Function"
 import Integer from "Integer"
 import Random from "Random"
+import { ansiColor } from "Terminal"
 
 import {
   ANSI_BACKGROUND,
@@ -121,3 +122,9 @@ export contrastByLuminance = pipe(
   toFloat,
   (x) => !isMid(x) ? WHITE : BLACK,
 )
+
+colorize :: String -> String -> String
+export colorize = (seed, raw) => pipe(
+  seeded(seed),
+  ansiColor($, raw),
+)(raw)

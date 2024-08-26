@@ -6,18 +6,32 @@ import { assertEquals, test } from "Test"
 import { report } from "Study"
 
 import Color from "@/Dye"
+import { hexFromInt, intFromHex } from "@/Hexadecimal"
 import { channelR, toAnsi256 } from "@/Math"
 import { seededSeqBg, seededSeqFg } from "@/Random"
 
 
 
 report(
-  Color.intFromHex,
+  hexFromInt,
+  "hexFromInt",
+  [
+    #[74565, "#012345"],
+    #[7903932, "#789abc"],
+    #[427, "#0001ab"],
+    #[16777206, "#fffff6"],
+    #[16702650, "#fedcba"],
+    #[-1, "#ffffff"],
+  ],
+)
+
+report(
+  intFromHex,
   "intFromHex",
   [
     #["#012345", 74565],
     #["#789abc", 7903932],
-    #["#1AB", 427],
+    #["#0001AB", 427],
     #["#fffff6", 16777206],
     #["#fedcba", 16702650],
     #["#FEDCBA", 16702650],

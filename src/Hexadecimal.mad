@@ -1,0 +1,91 @@
+import { fromInteger } from "Float"
+import { fromFloat } from "Integer"
+import { length, nth, range, reduce, reverse, zip } from "List"
+import { floor, pow } from "Math"
+import { fromMaybe } from "Maybe"
+import { fromList, replace, split, toList } from "String"
+
+import { channelB, channelG, channelR } from "@/Math"
+
+
+
+hexChar :: Char -> Integer
+export hexChar = (c) => if (c == '0') {
+  0
+} else if (c == '1') {
+  1
+} else if (c == '2') {
+  2
+} else if (c == '3') {
+  3
+} else if (c == '4') {
+  4
+} else if (c == '5') {
+  5
+} else if (c == '6') {
+  6
+} else if (c == '7') {
+  7
+} else if (c == '8') {
+  8
+} else if (c == '9') {
+  9
+} else if (c == 'a' || c == 'A') {
+  10
+} else if (c == 'b' || c == 'B') {
+  11
+} else if (c == 'c' || c == 'C') {
+  12
+} else if (c == 'd' || c == 'D') {
+  13
+} else if (c == 'e' || c == 'E') {
+  14
+} else if (c == 'f' || c == 'F') {
+  15
+} else {
+  -1
+}
+
+export intToHex = (i) => pipe(
+  nth(i),
+  fromMaybe('?'),
+)(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'])
+
+export intFromHex = (hex) => {
+  clean = replace("#", "", hex)
+  return pipe(
+    split(""),
+    length,
+    range(0),
+    reverse,
+    zip(
+      $,
+      pipe(
+        toList,
+        map(hexChar),
+      )(clean),
+    ),
+    reduce((y, c) => where(c) { #[i, x] => y + fromInteger(x) * pow(16_f, fromInteger(i)) }, 0),
+    fromFloat,
+  )(clean)
+}
+
+_whole = (y) => pipe(
+  floor,
+  fromFloat,
+  intToHex,
+)(y / 16)
+
+_partial = (y) => pipe(
+  intToHex,
+)(y % 16)
+
+export hexFromInt = (v) => {
+  r = channelR(v)
+  g = channelG(v)
+  b = channelB(v)
+  return pipe(
+    fromList,
+    mappend("#"),
+  )([_whole(r), _partial(r), _whole(g), _partial(g), _whole(b), _partial(b)])
+}

@@ -12,7 +12,7 @@ import {
   FULL_COLOR_CHANNEL,
   HALF_COLOR_CHANNEL,
 } from "@/Constants"
-import { intFromHex } from "@/Hexadecimal"
+import { hexFromInt, intFromHex } from "@/Hexadecimal"
 import { channelB, channelG, channelR } from "@/Math"
 import { colorFromSeed } from "@/Random"
 
@@ -48,6 +48,8 @@ export fromHexString = pipe(
   intFromHex,
   fromFloat,
 )
+
+export toHexString = hexFromInt
 
 toList :: Color a -> List a
 export toList = where {

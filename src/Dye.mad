@@ -2,6 +2,7 @@ import { ge } from "Compare"
 import Float from "Float"
 import { identity } from "Function"
 import Integer from "Integer"
+import { pow } from "Math"
 import Random from "Random"
 import String from "String"
 import { ansiColor } from "Terminal"
@@ -84,13 +85,41 @@ export rgbInvert = change(invert)
 
 isMid = ge($, HALF_COLOR_CHANNEL)
 
-luminance :: Color Float -> Color Float
-export luminance = mapRGB((r) => r * 0.2126, (g) => g * 0.7152, (b) => b * 0.0722)
+// https://github.com/Qix-/color/blob/master/index.js#L263-L274
+/*
+luminosity() {
+  // http://www.w3.org/TR/WCAG20/#relativeluminancedef
+  const rgb = this.rgb().color;
+
+  const lum = [];
+  for (const [i, element] of rgb.entries()) {
+    const chan = element / 255;
+    lum[i] = (chan <= 0.04045) ? chan / 12.92 : ((chan + 0.055) / 1.055) ** 2.4;
+  }
+
+  return 0.2126 * lum[0] + 0.7152 * lum[1] + 0.0722 * lum[2];
+}
+*/
+
+luminance :: Color Float -> Float
+export luminance = pipe(
+  change(
+    (el) => {
+      chan = el / 255
+      return if (chan < 0.04045) {
+        chan / 12.92
+      } else {
+        pow(((chan + 0.055) / 1.055), 2.4)
+      }
+    },
+  ),
+  mapRGB((r) => r * 0.2126, (g) => g * 0.7152, (b) => b * 0.0722),
+  toInteger,
+)
 
 isLuminous :: Color Float -> Boolean
 isLuminous = pipe(
   luminance,
-  toInteger,
   isMid,
 )
 
@@ -128,7 +157,6 @@ export seeded = (seedPrefix, str) => pipe(
 contrastByLuminance :: Color Float -> Color Float
 export contrastByLuminance = pipe(
   luminance,
-  toFloat,
   (x) => !isMid(x) ? WHITE : BLACK,
 )
 

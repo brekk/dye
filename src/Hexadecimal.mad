@@ -80,12 +80,17 @@ _partial = (y) => pipe(
   intToHex,
 )(y % 16)
 
+export toHexString = where {
+  #[r, g, b] =>
+    pipe(
+      fromList,
+      mappend("#"),
+    )([_whole(r), _partial(r), _whole(g), _partial(g), _whole(b), _partial(b)])
+}
+
 export hexFromInt = (v) => {
   r = channelR(v)
   g = channelG(v)
   b = channelB(v)
-  return pipe(
-    fromList,
-    mappend("#"),
-  )([_whole(r), _partial(r), _whole(g), _partial(g), _whole(b), _partial(b)])
+  return toHexString(#[r, g, b])
 }

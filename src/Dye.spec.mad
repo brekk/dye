@@ -1,13 +1,29 @@
+import IO from "IO"
 import List from "List"
 import String from "String"
 import { assertEquals, test } from "Test"
 
+import { report } from "Study"
+
 import Color from "@/Dye"
 import { channelR, toAnsi256 } from "@/Math"
 import { seededSeqBg, seededSeqFg } from "@/Random"
-import { report } from "@/Test"
 
 
+
+report(
+  Color.fromHexString,
+  "fromHexString",
+  [
+    #["#012345", 74565],
+    #["#789abc", 7903932],
+    #["#1AB", 427],
+    #["#fffff6", 16777206],
+    #["#fedcba", 16702650],
+    #["#FEDCBA", 16702650],
+    #["?", -1],
+  ],
+)
 
 test(
   "toAnsi256",

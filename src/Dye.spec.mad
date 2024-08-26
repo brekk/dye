@@ -136,6 +136,20 @@ report(
 )
 
 report(
+  Dye.bwContrastHex,
+  "bwContrastHex",
+  [
+    #["#fedcba", "#000000"],
+    #["#012345", "#ffffff"],
+    #["#ff0000", "#000000"],
+    #["#00ff00", "#000000"],
+    #["#0000ff", "#ffffff"],
+    #["#888888", "#000000"],
+    #["#666666", "#ffffff"],
+  ],
+)
+
+report(
   caseN2(Dye.contrastLevel(false)),
   "contrastLevel - not large",
   [

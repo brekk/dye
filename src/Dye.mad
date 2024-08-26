@@ -1,6 +1,6 @@
 import { ge } from "Compare"
 import Float from "Float"
-import { identity } from "Function"
+import { always, identity, ifElse } from "Function"
 import Integer from "Integer"
 import { pow } from "Math"
 import Random from "Random"
@@ -143,6 +143,13 @@ contrastBlack :: Color Float -> Boolean
 export contrastBlack = pipe(
   bwContrast,
   (x) => x == BLACK,
+)
+
+bwContrastHex :: String -> String
+export bwContrastHex = pipe(
+  fromHexString,
+  toTupleFloat,
+  ifElse(contrastBlack, always("#000000"), always("#ffffff")),
 )
 
 seededAnsi :: String -> String -> List String

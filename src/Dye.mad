@@ -126,6 +126,12 @@ export contrastLevel = (large, a, b) => {
   }
 }
 
+highContrast :: Boolean -> Color Float -> Color Float -> Boolean
+export highContrast = (large, a, b) => pipe(
+  contrast(a),
+  (x) => large ? x > CONTRAST_AAA_LARGE : x > CONTRAST_AAA,
+)(b)
+
 bwContrast :: Color Float -> Color Float
 export bwContrast = (color) => {
   b = contrast(color, BLACK)

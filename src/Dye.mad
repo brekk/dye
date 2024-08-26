@@ -75,8 +75,14 @@ hexChar = (c) => if (c == '0') {
   -1
 }
 
+export fromFloat = (v) => {
+  r = channelR(v)
+  g = channelG(v)
+  b = channelB(v)
+  return #[r, g, b]
+}
 
-export fromHexString = (hex) => {
+export intFromHex = (hex) => {
   clean = String.replace("#", "", hex)
   return pipe(
     String.split(""),
@@ -101,13 +107,10 @@ export fromHexString = (hex) => {
   )(clean)
 }
 
-export fromFloat = (v) => {
-  r = channelR(v)
-  g = channelG(v)
-  b = channelB(v)
-  return #[r, g, b]
-}
-
+export fromHexString = pipe(
+  intFromHex,
+  fromFloat,
+)
 
 toList :: Color a -> List a
 export toList = where {

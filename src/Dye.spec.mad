@@ -12,8 +12,8 @@ import { seededSeqBg, seededSeqFg } from "@/Random"
 
 
 report(
-  Color.fromHexString,
-  "fromHexString",
+  Color.intFromHex,
+  "intFromHex",
   [
     #["#012345", 74565],
     #["#789abc", 7903932],
@@ -22,6 +22,20 @@ report(
     #["#fedcba", 16702650],
     #["#FEDCBA", 16702650],
     #["?", -1],
+  ],
+)
+
+report(
+  Color.fromHexString,
+  "fromHexString",
+  [
+    #["#012345", #[1, 35, 69]],
+    #["#789abc", #[120, 154, 188]],
+    #["#1AB", #[0, 1, 171]],
+    #["#fffff6", #[255, 255, 246]],
+    #["#fedcba", #[254, 220, 186]],
+    #["#FEDCBA", #[254, 220, 186]],
+    #["?", #[255, 255, 255]],
   ],
 )
 

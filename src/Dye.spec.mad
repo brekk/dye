@@ -3,9 +3,9 @@ import List from "List"
 import String from "String"
 import { assertEquals, test } from "Test"
 
-import { report } from "Study"
+import { caseN2, report } from "Study"
 
-import Color from "@/Dye"
+import Dye from "@/Dye"
 import { hexFromInt, intFromHex } from "@/Hexadecimal"
 import { channelR, toAnsi256 } from "@/Math"
 import { seededSeqBg, seededSeqFg } from "@/Random"
@@ -40,7 +40,7 @@ report(
 )
 
 report(
-  Color.fromHexString,
+  Dye.fromHexString,
   "fromHexString",
   [
     #["#012345", #[1, 35, 69]],
@@ -74,49 +74,81 @@ test(
   },
 )
 
-test(
-  "seeded",
-  () => {
-    check = Color.seeded("test")
-    return assertEquals(
-      check("cool"),
-      ["38", "2", "255", "255", "255", "48", "2", "46", "214", "1"],
-    )
-  },
+report(
+  Dye.seededAnsi("test"),
+  "seededAnsi",
+  [
+    #["cool", ["38", "2", "0", "0", "0", "48", "2", "46", "214", "1"]],
+    #["dope", ["38", "2", "255", "255", "255", "48", "2", "207", "49", "90"]],
+  ],
 )
 
 report(
-  Color.fromFloat,
+  Dye.fromFloat,
   "fromFloat",
   [
-    #[0xffffff, Color.WHITE],
-    #[0x000000, Color.BLACK],
+    #[0xffffff, Dye.WHITE],
+    #[0x000000, Dye.BLACK],
     #[0xdeadbe, #[222, 173, 190]],
     #[0x123456, #[18, 52, 86]],
   ],
 )
-report(Color.luminance, "luminance", [#[#[3, 3, 3], 0.0009105809506465124]])
-report(channelR, "channelR", [#[0xff0000, 0xff], #[0x120000, 0x12]])
 report(
-  Color.contrastByLuminance,
-  "contrastByLuminance",
+  Dye.luminosity,
+  "luminosity",
   [
-    #[#[255, 100, 30], Color.WHITE],
-    #[#[30, 120, 255], Color.WHITE],
-    #[Color.BLACK, Color.WHITE],
-    #[Color.WHITE, Color.WHITE],
-    #[#[128, 128, 128], Color.WHITE],
+    #[#[3, 3, 3], 0.0009105809506465124],
+    #[#[127, 127, 127], 0.2122307574140552],
+    #[#[0, 100, 200], 0.1328447368465958],
+    #[#[254, 127, 80], 0.3682876145756371],
+    #[#[254, 254, 254], 0.9911020971138298],
   ],
 )
 
+report(channelR, "channelR", [#[0xff0000, 0xff], #[0x120000, 0x12]])
+
 report(
-  Color.toChannel,
+  Dye.toChannel,
   "toChannel",
   [#[#[0, 150, 255], 255], #[#[255, 255, 255], 255], #[#[150, 150, 150], 150], #[#[0, 0, 0], 0]],
 )
 
 report(
-  Color.toList,
+  caseN2(Dye.contrast),
+  "contrast",
+  [
+    #[#[#[0, 0, 0], #[255, 255, 255]], 21],
+    #[#[#[255, 255, 255], #[0, 0, 0]], 21],
+    #[#[#[255, 255, 255], #[255, 255, 255]], 1],
+    #[#[#[255, 255, 255], #[128, 128, 128]], 3.9494396480491156],
+  ],
+)
+
+report(
+  caseN2(Dye.contrastLevel(true)),
+  "contrastLevel - large",
+  [
+    #[#[#[0, 0, 0], #[255, 255, 255]], Dye.AAALarge],
+    #[#[#[255, 255, 255], #[0, 0, 0]], Dye.AAALarge],
+    #[#[#[255, 255, 255], #[255, 255, 255]], Dye.LowContrast],
+    #[#[#[255, 255, 255], #[128, 128, 128]], Dye.AALarge],
+  ],
+)
+
+report(
+  caseN2(Dye.contrastLevel(false)),
+  "contrastLevel - not large",
+  [
+    #[#[#[0, 0, 0], #[255, 255, 255]], Dye.AAA],
+    #[#[#[255, 255, 255], #[0, 0, 0]], Dye.AAA],
+    #[#[#[255, 255, 255], #[255, 255, 255]], Dye.LowContrast],
+    #[#[#[255, 255, 255], #[128, 128, 128]], Dye.LowContrast],
+    #[#[#[255, 255, 255], #[0, 128, 128]], Dye.AA],
+  ],
+)
+
+report(
+  Dye.toList,
   "toList",
   [
     #[#[1, 2, 3], [1, 2, 3]],
@@ -125,33 +157,21 @@ report(
   ],
 )
 
-report(
-  Color.mapR((x) => x * 2),
-  "mapR",
-  [#[#[10, 0, 0], #[20, 0, 0]], #[#[100, 0, 0], #[200, 0, 0]]],
-)
+report(Dye.mapR((x) => x * 2), "mapR", [#[#[10, 0, 0], #[20, 0, 0]], #[#[100, 0, 0], #[200, 0, 0]]])
+
+report(Dye.mapG((x) => x * 2), "mapG", [#[#[0, 10, 0], #[0, 20, 0]], #[#[0, 100, 0], #[0, 200, 0]]])
+
+report(Dye.mapB((x) => x * 2), "mapB", [#[#[0, 0, 10], #[0, 0, 20]], #[#[0, 0, 100], #[0, 0, 200]]])
 
 report(
-  Color.mapG((x) => x * 2),
-  "mapG",
-  [#[#[0, 10, 0], #[0, 20, 0]], #[#[0, 100, 0], #[0, 200, 0]]],
-)
-
-report(
-  Color.mapB((x) => x * 2),
-  "mapB",
-  [#[#[0, 0, 10], #[0, 0, 20]], #[#[0, 0, 100], #[0, 0, 200]]],
-)
-
-report(
-  Color.mixer(
+  Dye.mixer(
     (a, z) => where(#[a, z]) {
       #[#[r1, g1, b1], #[r2, g2, b2]] =>
         #[(r1 + r2) & 0xff, (g1 + g2) & 0xff, (b1 + b2) & 0xff]
     },
     #[127, 127, 127],
   ),
-  "Color.mixer(black)",
+  "Dye.mixer(black)",
   [
     #[#[180, 180, 180], #[51, 51, 51]],
     #[#[0, 0, 0], #[127, 127, 127]],
@@ -162,8 +182,8 @@ report(
 ESC_ANSI = '\x1b'
 
 report(
-  Color.toFloat,
-  "Color.toFloat",
+  Dye.toFloat,
+  "Dye.toFloat",
   [
     #[#[255, 255, 255], 231],
     #[#[255, 128, 40], 211.84313725490196],
@@ -173,10 +193,10 @@ report(
 
 report(
   pipe(
-    Color.colorize("check"),
+    Dye.colorize("check"),
     String.toList,
   ),
-  "Color.colorize",
+  "Dye.colorize",
   [
     #[
       "hey",
@@ -188,17 +208,11 @@ report(
         ';',
         '2',
         ';',
-        '2',
-        '5',
-        '5',
+        '0',
         ';',
-        '2',
-        '5',
-        '5',
+        '0',
         ';',
-        '2',
-        '5',
-        '5',
+        '0',
         ';',
         '4',
         '8',
@@ -228,7 +242,7 @@ report(
   ],
 )
 
-report(Color.toTupleInt, "toTupleInt", [#[#[12.02, 30.2, 2.35], #[12, 30, 2]]])
+report(Dye.toTupleInt, "toTupleInt", [#[#[12.02, 30.2, 2.35], #[12, 30, 2]]])
 
-report(Color.invert, "invert", [#[29, 226]])
-report(Color.rgbInvert, "rgbInvert", [#[#[12, 30, 2], #[243, 225, 253]]])
+report(Dye.invert, "invert", [#[29, 226]])
+report(Dye.rgbInvert, "rgbInvert", [#[#[12, 30, 2], #[243, 225, 253]]])

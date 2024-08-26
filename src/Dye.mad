@@ -7,12 +7,7 @@ import Random from "Random"
 import String from "String"
 import { ansiColor } from "Terminal"
 
-import {
-  ANSI_BACKGROUND,
-  ANSI_FOREGROUND,
-  FULL_COLOR_CHANNEL,
-  HALF_COLOR_CHANNEL,
-} from "@/Constants"
+import { ANSI_BACKGROUND, ANSI_FOREGROUND, FULL_COLOR_CHANNEL } from "@/Constants"
 import { hexFromInt, intFromHex, toHexString } from "@/Hexadecimal"
 import { channelB, channelG, channelR } from "@/Math"
 import { colorFromSeed } from "@/Random"
@@ -83,11 +78,10 @@ export invert = (x) => FULL_COLOR_CHANNEL - x
 
 export rgbInvert = change(invert)
 
-isMid = ge($, HALF_COLOR_CHANNEL)
 
 // https://github.com/Qix-/color/blob/master/index.js#L263-L274
-luminance :: Color Float -> Float
-export luminance = pipe(
+luminosity :: Color Float -> Float
+export luminosity = pipe(
   change(
     (el) => {
       chan = el / 255
@@ -102,51 +96,81 @@ export luminance = pipe(
   toInteger,
 )
 
-isLuminous :: Color Float -> Boolean
-isLuminous = pipe(
-  luminance,
-  isMid,
+contrast :: Color Float -> Color Float -> Float
+export contrast = (a, b) => {
+  aL = luminosity(a)
+  bL = luminosity(b)
+  aL2 = aL + 0.05
+  bL2 = bL + 0.05
+  return if (aL > bL) {
+    aL2 / bL2
+  } else {
+    bL2 / aL2
+  }
+}
+
+export type ContrastLevel = AAALarge | AALarge | AAA | AA | LowContrast
+
+CONTRAST_AAA_LARGE = 4.5
+CONTRAST_AA_LARGE = 3
+CONTRAST_AAA = 7
+CONTRAST_AA = 4.5
+
+contrastLevel :: Boolean -> Color Float -> Color Float -> ContrastLevel
+export contrastLevel = (large, a, b) => {
+  c = contrast(a, b)
+  return if (large) {
+    c > CONTRAST_AAA_LARGE ? AAALarge : c > CONTRAST_AA_LARGE ? AALarge : LowContrast
+  } else {
+    c > CONTRAST_AAA ? AAA : c > CONTRAST_AA ? AA : LowContrast
+  }
+}
+
+bwContrast :: Color Float -> Color Float
+export bwContrast = (color) => {
+  b = contrast(color, BLACK)
+  w = contrast(color, WHITE)
+  return b > w ? BLACK : WHITE
+}
+
+contrastBlack :: Color Float -> Boolean
+export contrastBlack = pipe(
+  bwContrast,
+  (x) => x == BLACK,
 )
 
-seeded :: String -> String -> List String
-export seeded = (seedPrefix, str) => pipe(
+seededAnsi :: String -> String -> List String
+export seededAnsi = (seedPrefix, str) => pipe(
   mappend(seedPrefix),
   Random.generateFromString,
   colorFromSeed,
-  (color) => {
-    black = pipe(
-      toTupleFloat,
-      isLuminous,
-    )(color)
-    return where(color) {
-      #[r, g, b] =>
-        do {
-          blackChannel = black ? 0 : FULL_COLOR_CHANNEL
-          return map(show)([
-            ANSI_FOREGROUND,
-            2,
-            blackChannel,
-            blackChannel,
-            blackChannel,
-            ANSI_BACKGROUND,
-            2,
-            r,
-            g,
-            b,
-          ])
-        }
-    }
+  where {
+    #[r, g, b] =>
+      do {
+        blackChannel = pipe(
+          toTupleFloat,
+          contrastBlack,
+        )(#[r, g, b])
+          ? 0
+          : FULL_COLOR_CHANNEL
+        return map(show)([
+          ANSI_FOREGROUND,
+          2,
+          blackChannel,
+          blackChannel,
+          blackChannel,
+          ANSI_BACKGROUND,
+          2,
+          r,
+          g,
+          b,
+        ])
+      }
   },
 )(str)
 
-contrastByLuminance :: Color Float -> Color Float
-export contrastByLuminance = pipe(
-  luminance,
-  (x) => !isMid(x) ? WHITE : BLACK,
-)
-
 colorize :: String -> String -> String
 export colorize = (seed, raw) => pipe(
-  seeded(seed),
+  seededAnsi(seed),
   ansiColor($, raw),
 )(raw)

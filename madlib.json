@@ -1,15 +1,15 @@
 {
   "name": "dye",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "main": "src/Dye.mad",
   "importAliases": {
     ".": "src"
   },
   "dependencies": [
     {
+      "minVersion": "0.0.7",
       "url": "https://github.com/brekk/study/archive/refs/tags/v0.0.7.zip",
-      "description": "Study",
-      "minVersion": "0.0.7"
+      "description": "Study"
     }
   ]
 }

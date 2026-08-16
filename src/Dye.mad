@@ -1,4 +1,3 @@
-import { ge } from "Compare"
 import Float from "Float"
 import { always, identity, ifElse } from "Function"
 import Integer from "Integer"
@@ -17,68 +16,51 @@ import { colorFromSeed } from "@/Random"
 export alias Color a = #[a, a, a]
 export BLACK = #[0, 0, 0]
 export WHITE = #[FULL_COLOR_CHANNEL, FULL_COLOR_CHANNEL, FULL_COLOR_CHANNEL]
-
 export toChannel = where {
   #[r, g, b] =>
     r | g | b
 }
-
 export toInteger = where {
   #[r, g, b] =>
     r + g + b
 }
-
 export toFloat = where {
   #[r, g, b] =>
     16 + (36 * (r / 255 * 5)) + (6 * (g / 255 * 5)) + (b / 255 * 5)
 }
-
 export fromFloat = (v) => {
   r = channelR(v)
   g = channelG(v)
   b = channelB(v)
   return #[r, g, b]
 }
-
 export fromHexString = pipe(
   intFromHex,
   fromFloat,
 )
-
 export hexFromInt
 export toHexString
-
 toList :: Color a -> List a
 export toList = where {
   #[r, g, b] =>
     [r, g, b]
 }
-
 mixer :: (Color a -> Color a -> Color b) -> Color a -> Color a -> Color b
 export mixer = (mix, a, b) => mix(a, b)
-
 mapRGB :: (a -> b) -> (a -> b) -> (a -> b) -> Color a -> Color b
 export mapRGB = (fnR, fnG, fnB, a) => where(a) {
   #[r, g, b] =>
     #[fnR(r), fnG(g), fnB(b)]
 }
-
 export mapR = mapRGB($, identity, identity)
 export mapG = mapRGB(identity, $, identity)
 export mapB = mapRGB(identity, identity, $)
-
 change :: (a -> b) -> Color a -> Color b
 export change = (fn, a) => mapRGB(fn, fn, fn)(a)
-
 export toTupleFloat = change(Integer.toFloat)
-
 export toTupleInt = change(Float.toInteger)
-
 export invert = (x) => FULL_COLOR_CHANNEL - x
-
 export rgbInvert = change(invert)
-
-
 // https://github.com/Qix-/color/blob/master/index.js#L263-L274
 luminosity :: Color Float -> Float
 export luminosity = pipe(
@@ -95,7 +77,6 @@ export luminosity = pipe(
   mapRGB((r) => r * 0.2126, (g) => g * 0.7152, (b) => b * 0.0722),
   toInteger,
 )
-
 contrast :: Color Float -> Color Float -> Float
 export contrast = (a, b) => {
   aL = luminosity(a)
@@ -108,14 +89,11 @@ export contrast = (a, b) => {
     bL2 / aL2
   }
 }
-
 export type ContrastLevel = AAALarge | AALarge | AAA | AA | LowContrast
-
 CONTRAST_AAA_LARGE = 4.5
 CONTRAST_AA_LARGE = 3
 CONTRAST_AAA = 7
 CONTRAST_AA = 4.5
-
 contrastLevel :: Boolean -> Color Float -> Color Float -> ContrastLevel
 export contrastLevel = (large, a, b) => {
   c = contrast(a, b)
@@ -125,33 +103,28 @@ export contrastLevel = (large, a, b) => {
     c > CONTRAST_AAA ? AAA : c > CONTRAST_AA ? AA : LowContrast
   }
 }
-
 highContrast :: Boolean -> Color Float -> Color Float -> Boolean
 export highContrast = (large, a, b) => pipe(
   contrast(a),
   (x) => large ? x > CONTRAST_AAA_LARGE : x > CONTRAST_AAA,
 )(b)
-
 bwContrast :: Color Float -> Color Float
 export bwContrast = (color) => {
   b = contrast(color, BLACK)
   w = contrast(color, WHITE)
   return b > w ? BLACK : WHITE
 }
-
 contrastBlack :: Color Float -> Boolean
 export contrastBlack = pipe(
   bwContrast,
   (x) => x == BLACK,
 )
-
 bwContrastHex :: String -> String
 export bwContrastHex = pipe(
   fromHexString,
   toTupleFloat,
   ifElse(contrastBlack, always("#000000"), always("#ffffff")),
 )
-
 seededAnsi :: String -> String -> List String
 export seededAnsi = (seedPrefix, str) => pipe(
   mappend(seedPrefix),
@@ -181,7 +154,6 @@ export seededAnsi = (seedPrefix, str) => pipe(
       }
   },
 )(str)
-
 colorize :: String -> String -> String
 export colorize = (seed, raw) => pipe(
   seededAnsi(seed),

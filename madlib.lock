@@ -1,0 +1,12 @@
+{
+  "lockfileVersion": 1,
+  "packages": {
+    "https://github.com/brekk/study/archive/refs/tags/v0.0.7.zip": {
+      "buildHash": "919dea83a7ccd0a2a11a03e011ecd52e",
+      "dependencies": [],
+      "name": "study",
+      "version": "0.0.7",
+      "versionHash": "18674886c733b8b107f76ff083ead6ea"
+    }
+  }
+}

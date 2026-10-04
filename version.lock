@@ -1,5 +1,5 @@
 {
-  "buildHash": "ac0ba8458ced76cfc1603a04168c9779",
+  "buildHash": "93fd134389451a03d5f36a4caeccd770",
   "jsApi": {
     "apiInstances": [],
     "apiAliases": {
@@ -14,10 +14,12 @@
       "seededAnsi": "String -> String -> List String",
       "src/Hexadecimal.mad#intFromHex": "String -> Integer",
       "luminosity": "#[Float, Float, Float] -> Float",
+      "uncolorize": "String -> String",
       "toList": "#[a, a, a] -> List a",
       "toTupleFloat": "#[Integer, Integer, Integer] -> #[Float, Float, Float]",
       "fromHexString": "String -> #[Integer, Integer, Integer]",
       "src/Random.mad#seededSeqBg": "String -> List String",
+      "stripAnsi": "String -> String",
       "src/Hexadecimal.mad#hexChar": "Char -> Integer",
       "colorize": "String -> String -> String",
       "WHITE": "(Number a, Number b, Number c) => #[c, b, a]",
@@ -77,10 +79,12 @@
       "seededAnsi": "String -> String -> List String",
       "src/Hexadecimal.mad#intFromHex": "String -> Integer",
       "luminosity": "#[Float, Float, Float] -> Float",
+      "uncolorize": "String -> String",
       "toList": "#[a, a, a] -> List a",
       "toTupleFloat": "#[Integer, Integer, Integer] -> #[Float, Float, Float]",
       "fromHexString": "String -> #[Integer, Integer, Integer]",
       "src/Random.mad#seededSeqBg": "String -> List String",
+      "stripAnsi": "String -> String",
       "src/Hexadecimal.mad#hexChar": "Char -> Integer",
       "colorize": "String -> String -> String",
       "WHITE": "(Number a, Number b, Number c) => #[c, b, a]",

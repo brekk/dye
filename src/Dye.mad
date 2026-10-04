@@ -159,3 +159,5 @@ export colorize = (seed, raw) => pipe(
   seededAnsi(seed),
   ansiColor($, raw),
 )(raw)
+export stripAnsi = String.replace("\\u001b\\[[0-9;]*m", "")
+export uncolorize = stripAnsi

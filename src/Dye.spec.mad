@@ -24,7 +24,6 @@ report(
     #[-1, "#ffffff"],
   ],
 )
-
 report(
   intFromHex,
   "intFromHex",
@@ -38,7 +37,6 @@ report(
     #["?", -1],
   ],
 )
-
 report(
   Dye.fromHexString,
   "fromHexString",
@@ -52,7 +50,6 @@ report(
     #["?", #[255, 255, 255]],
   ],
 )
-
 test(
   "toAnsi256",
   () => do {
@@ -63,7 +60,6 @@ test(
     return assertEquals(toAnsi256(244, 200, 2), 220)
   },
 )
-
 test(
   "seededSeqBg",
   () => do {
@@ -73,7 +69,6 @@ test(
     return assertEquals(seededSeqBg("nice"), ["48", "2", "240", "101", "83"])
   },
 )
-
 report(
   Dye.seededAnsi("test"),
   "seededAnsi",
@@ -82,7 +77,6 @@ report(
     #["dope", ["38", "2", "255", "255", "255", "48", "2", "207", "49", "90"]],
   ],
 )
-
 report(
   Dye.fromFloat,
   "fromFloat",
@@ -104,15 +98,12 @@ report(
     #[#[254, 254, 254], 0.9911020971138298],
   ],
 )
-
 report(channelR, "channelR", [#[0xff0000, 0xff], #[0x120000, 0x12]])
-
 report(
   Dye.toChannel,
   "toChannel",
   [#[#[0, 150, 255], 255], #[#[255, 255, 255], 255], #[#[150, 150, 150], 150], #[#[0, 0, 0], 0]],
 )
-
 report(
   caseN2(Dye.contrast),
   "contrast",
@@ -123,7 +114,6 @@ report(
     #[#[#[255, 255, 255], #[128, 128, 128]], 3.9494396480491156],
   ],
 )
-
 report(
   caseN2(Dye.contrastLevel(true)),
   "contrastLevel - large",
@@ -134,7 +124,6 @@ report(
     #[#[#[255, 255, 255], #[128, 128, 128]], Dye.AALarge],
   ],
 )
-
 report(
   Dye.bwContrastHex,
   "bwContrastHex",
@@ -148,7 +137,6 @@ report(
     #["#666666", "#ffffff"],
   ],
 )
-
 report(
   caseN2(Dye.contrastLevel(false)),
   "contrastLevel - not large",
@@ -160,7 +148,6 @@ report(
     #[#[#[255, 255, 255], #[0, 128, 128]], Dye.AA],
   ],
 )
-
 report(
   caseN2(Dye.highContrast(false)),
   "highContrast - not large",
@@ -172,7 +159,6 @@ report(
     #[#[#[255, 255, 255], #[0, 128, 128]], false],
   ],
 )
-
 report(
   caseN2(Dye.highContrast(true)),
   "highContrast - large",
@@ -184,7 +170,6 @@ report(
     #[#[#[255, 255, 255], #[0, 128, 128]], true],
   ],
 )
-
 report(
   Dye.toList,
   "toList",
@@ -194,13 +179,9 @@ report(
     #[#[0, 180, 255], [0, 180, 255]],
   ],
 )
-
 report(Dye.mapR((x) => x * 2), "mapR", [#[#[10, 0, 0], #[20, 0, 0]], #[#[100, 0, 0], #[200, 0, 0]]])
-
 report(Dye.mapG((x) => x * 2), "mapG", [#[#[0, 10, 0], #[0, 20, 0]], #[#[0, 100, 0], #[0, 200, 0]]])
-
 report(Dye.mapB((x) => x * 2), "mapB", [#[#[0, 0, 10], #[0, 0, 20]], #[#[0, 0, 100], #[0, 0, 200]]])
-
 report(
   Dye.mixer(
     (a, z) => where(#[a, z]) {
@@ -216,9 +197,7 @@ report(
     #[#[255, 255, 255], #[126, 126, 126]],
   ],
 )
-
 ESC_ANSI = '\x1b'
-
 report(
   Dye.toFloat,
   "Dye.toFloat",
@@ -228,7 +207,6 @@ report(
     #[#[123, 12, 0], 104.23529411764704],
   ],
 )
-
 report(
   pipe(
     Dye.colorize("check"),
@@ -279,8 +257,13 @@ report(
     ],
   ],
 )
-
 report(Dye.toTupleInt, "toTupleInt", [#[#[12.02, 30.2, 2.35], #[12, 30, 2]]])
-
 report(Dye.invert, "invert", [#[29, 226]])
 report(Dye.rgbInvert, "rgbInvert", [#[#[12, 30, 2], #[243, 225, 253]]])
+testColorStrip = report(
+  $,
+  "strip colors",
+  [#[IO.red("RED"), "RED"], #[IO.green("GREEN"), "GREEN"], #[IO.yellow("YELLOW"), "YELLOW"]],
+)
+testColorStrip(Dye.stripAnsi)
+testColorStrip(Dye.uncolorize)

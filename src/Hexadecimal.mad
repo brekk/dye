@@ -45,12 +45,10 @@ export hexChar = (c) => if (c == '0') {
 } else {
   -1
 }
-
 export intToHex = (i) => pipe(
   nth(i),
   fromMaybe('?'),
 )(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'])
-
 export intFromHex = (hex) => {
   clean = replace("#", "", hex)
   return pipe(
@@ -65,21 +63,18 @@ export intFromHex = (hex) => {
         map(hexChar),
       )(clean),
     ),
-    reduce((y, c) => where(c) { #[i, x] => y + fromInteger(x) * pow(16_f, fromInteger(i)) }, 0),
+    reduce((y, c) => where(c) { #[i, x] => y + fromInteger(x) * pow(16, fromInteger(i)) }, 0),
     fromFloat,
   )(clean)
 }
-
 _whole = (y) => pipe(
   floor,
   fromFloat,
   intToHex,
 )(y / 16)
-
 _partial = (y) => pipe(
   intToHex,
 )(y % 16)
-
 export toHexString = where {
   #[r, g, b] =>
     pipe(
@@ -87,7 +82,6 @@ export toHexString = where {
       mappend("#"),
     )([_whole(r), _partial(r), _whole(g), _partial(g), _whole(b), _partial(b)])
 }
-
 export hexFromInt = (v) => {
   r = channelR(v)
   g = channelG(v)

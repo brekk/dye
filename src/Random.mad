@@ -15,7 +15,6 @@ export colorFromSeed = (seed) => {
   b = pull(seed)
   return #[r, g, b]
 }
-
 export seededSeq = (before, str) => pipe(
   Random.generateFromString,
   colorFromSeed,
@@ -27,6 +26,5 @@ export seededSeq = (before, str) => pipe(
       )([r, g, b])
   },
 )(str)
-
 export seededSeqBg = seededSeq(ANSI_BACKGROUND)
 export seededSeqFg = seededSeq(ANSI_FOREGROUND)

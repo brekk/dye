@@ -15,20 +15,17 @@ export analyze = (fn, name, testDict) => pipe(
     },
   ),
 )(testDict)
-
-printReport = (name, i) => `${name}\n  ↳ ${
+printReport = (name, i) => `${name}
+  ↳ ${
   pipe(
     show,
     Term.ansiColor([Term.ansi.FormatBold, Term.ansi.FGBrightYellow]),
   )(i)
 }`
-
 templateTest = (name, fn, i, o) => test(printReport(name, i), () => assertEquals(fn(i), o))
-
 export report = (fn, name, listInOut) => pipe(
   map(where { #[i, o] => templateTest(name, fn, i, o) }),
 )(listInOut)
-
 caseN2 :: (a -> b -> c) -> #[a, b] -> c
 export caseN2 = (fn, pair) => where(pair) {
   #[a, b] =>

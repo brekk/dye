@@ -19,13 +19,9 @@ export toAnsi256 = (r, g, b) => {
     16 + (36 * Math.round(r / 255 * 5)) + (6 * Math.round(g / 255 * 5)) + Math.round(b / 255 * 5)
   }
 }
-
-
 channelR :: Integer -> Integer
 export channelR = (raw) => (raw >> 16) & 0xff
-
 channelG :: Integer -> Integer
 export channelG = (raw) => (raw >> 8) & 0xff
-
 channelB :: Integer -> Integer
 export channelB = (raw) => raw & 0xff
